@@ -1,5 +1,7 @@
+console.log(' dfgbhnj');
 function DataNode(val,name='NODE'){
   this.val = val;
+  this.children = [];
   this.name = name;
   this.eval = function() {
     return val;
@@ -10,6 +12,7 @@ function OperatorNode(func, name='UNTITLED') {
   this.children = []
   this.name = name;
   this.eval = function() {
+    console.log('you are in here');
     if(func === 'OR') {
       for (var i = 0; i < this.children.length; i++) {
         if (this.children[i].eval()) {
@@ -17,19 +20,40 @@ function OperatorNode(func, name='UNTITLED') {
         }
       }
       return false;
-    } else {
+    } else if (func === "AND") {
       for (var i = 0; i < this.children.length; i++) {
         if (!this.children[i].eval()) {
           return false;
         }
-      }
-      return true;
     }
+    return true;
+    }
+    return null;
   };
   this.addChild = function(node) {
     this.children.push(node);
   }
 }
+
+function Tree(data,name="Tree") {
+  var node = new OperatorNode(data);
+  this._head = node;
+}
+Tree.prototype.traverseDF = function(callback) {
+     (function recurse(currentNode) {
+        for (var i = 0, length = currentNode.children.length; i < length; i++) {
+          console.log(currentNode.eval());
+          recurse(currentNode.children[i]);
+        }
+        callback(currentNode);
+      })(this._root);
+};
+
+var tree = new Tree("AND", "you have the cancer");
+
+tree.traverseDF(function(node){
+  console.log(node.eval());
+});
 
 var strep = new OperatorNode('AND', "Strep");
 var flu = new OperatorNode('OR', "Flu");
